@@ -22,6 +22,7 @@ const scene = new THREE.Scene();
  * Textures
  */
 const textureLoader = new THREE.TextureLoader();
+const flagTexture = textureLoader.load("./textures/flag-nepal.webp");
 
 /**
  * Test mesh
@@ -30,25 +31,39 @@ const textureLoader = new THREE.TextureLoader();
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
 
 const count = geometry.attributes.position.count;
-let randoms = new Float32Array(count);
-
+const randoms = new Float32Array(count);
 for (let i = 0; i < count; i++) {
   randoms[i] = Math.random();
 }
 geometry.setAttribute("aRandom", new THREE.BufferAttribute(randoms, 1));
-console.log(geometry);
 
 // Material
 const material = new THREE.RawShaderMaterial({
   vertexShader: testVertexShader,
   fragmentShader: testFragmentShader,
-  // wireframe: true,
   side: THREE.DoubleSide,
-  // transparent: true,
+  uniforms: {
+    uFrequency: { value: new THREE.Vector2(10, 5) },
+    uTime: { value: 0 },
+    uColor: { value: new THREE.Color("#c98f49") },
+    uTexture: { value: flagTexture },
+  },
 });
+
+gui
+  .add(material.uniforms.uFrequency.value, "x")
+  .min(0, 1)
+  .max(20)
+  .name("FrequencyX");
+gui
+  .add(material.uniforms.uFrequency.value, "y")
+  .min(0, 1)
+  .max(20)
+  .name("FrequencyY");
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material);
+mesh.scale.y = 0.75;
 scene.add(mesh);
 
 /**
@@ -106,6 +121,9 @@ const clock = new THREE.Clock();
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
+
+  // Update Material
+  material.uniforms.uTime.value = elapsedTime;
 
   // Update controls
   controls.update();
