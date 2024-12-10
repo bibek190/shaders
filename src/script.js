@@ -22,7 +22,7 @@ const scene = new THREE.Scene();
  * Textures
  */
 const textureLoader = new THREE.TextureLoader();
-const flagTexture = textureLoader.load("./textures/flag-nepal.webp");
+const flagTexture = textureLoader.load("./textures/flag-australia.svg");
 
 /**
  * Test mesh
@@ -44,7 +44,7 @@ geometry.setAttribute("aRandom", new THREE.BufferAttribute(random, 1));
 // geometry.setAttribute("aRandom", new THREE.BufferAttribute(randoms, 1));
 
 // Material
-const material = new THREE.RawShaderMaterial({
+const material = new THREE.ShaderMaterial({
   vertexShader: testVertexShader,
   fragmentShader: testFragmentShader,
   side: THREE.DoubleSide,
